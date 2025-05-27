@@ -18,7 +18,7 @@ import gc
 import time
 warnings.filterwarnings('ignore')
 
-# Functions
+# Function
 def read_data(pintu_air):
     # Read full dataset
     df = pd.read_csv("https://raw.githubusercontent.com/elvano22/Pintu-Air/refs/heads/main/03%20Result%20Data%20Cleaning%20Part%203.csv")
