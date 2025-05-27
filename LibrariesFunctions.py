@@ -104,7 +104,7 @@ def plot_decompose(decomposition):
     plt.tight_layout()
     plt.show()
 
-    def plot_acf_pacf(data, period, lag):
+def plot_acf_pacf(data, period, lag):
     fig, axes = plt.subplots(1, 2, figsize=(14, 12))
 
     # ACF Plot
