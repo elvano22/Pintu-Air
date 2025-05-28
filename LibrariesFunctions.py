@@ -21,7 +21,7 @@ warnings.filterwarnings('ignore')
 # Function
 def read_data(pintu_air):
     # Read full dataset
-    df = pd.read_csv("https://raw.githubusercontent.com/elvano22/Pintu-Air/refs/heads/main/03%20Result%20Data%20Cleaning%20Part%203.csv")
+    df = pd.read_csv("03 Result Data Cleaning Part 3.csv")
     df['Tanggal'] = pd.to_datetime(df['Tanggal'])
     df = df.set_index('Tanggal')
     print(f"{'='*60}\nFull Dataset Information:\n{'='*60}")
@@ -124,19 +124,19 @@ def plot_acf_pacf(data, period, lag):
 
 
 def boxcox_transformation(data):
-    # Hitung lambda optimal
+    # Calculate optimum lambda
     lambda_opt = boxcox_normmax(data, method='mle')
 
-    # Log-likelihood pada lambda optimal
+    # Log-likelihood with optimum lambda
     llf_opt = boxcox_llf(lambda_opt, data)
 
-    # Log-likelihood jika lambda = 1 (tidak ditransformasi)
+    # Log-likelihood if lambda = 1
     llf_null = boxcox_llf(1.0, data)
 
-    # Hitung LRT
+    # Calculate LRT
     lrt_stat = 2 * (llf_opt - llf_null)
 
-    # Hitung p-value (df = 1)
+    # Calculate p-value (df = 1)
     p_value = chi2.sf(lrt_stat, df=1)
 
     print(f"Lambda optimal: {lambda_opt:.4f}")
@@ -206,10 +206,14 @@ def modelling(model_configs, data_y_train_trans, data_y_train, data_x_train, dat
 
             # Calculate RMSE for training
             print("Calculating training RMSE...")
-            fitted_values = results.fittedvalues
-            fitted_values_transformed = inverse_transform(fitted_values, lambda_opt)
-            rmse_train = np.sqrt(mean_squared_error(data_y_train, fitted_values_transformed))
-            print(f"Training RMSE: {rmse_train:.4f}")
+            try:
+                fitted_values = results.fittedvalues
+                fitted_values_transformed = inverse_transform(fitted_values, lambda_opt)
+                rmse_train = np.sqrt(mean_squared_error(data_y_train, fitted_values_transformed))
+                print(f"Training RMSE: {rmse_train:.4f}")
+            except Exception as train_error:
+                print(f"Training RMSE calculation failed: {train_error}")
+                rmse_train = np.nan
 
             # Calculate RMSE for testing
             print("Calculating testing RMSE...")
