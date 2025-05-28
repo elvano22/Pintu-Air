@@ -92,9 +92,9 @@
 6,Pasar Ikan (air),"ARIMA(9,0,3)",Ya,0.000000,Tidak,0.001000,Tidak,6.6139,29.8338
 7,Pasar Ikan (air),"ARIMA(9,0,4)",Tidak,0.000000,Tidak,0.001000,Tidak,7.1436,23.2644
 0,Pasar Ikan (air),"ARIMA(1,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,9.4132,107.9941
-1,Pasar Ikan (air),"ARIMA(2,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,8.6949,113.1107
-2,Pasar Ikan (air),"ARIMA(3,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,8.1874,Error
-3,Pasar Ikan (air),"ARIMA(4,0,0)",Ya,0.000000,Tidak,0.001000,Tidak,17.4488,159.2198
-4,Pasar Ikan (air),"ARIMA(5,0,0)",Ya,0.000000,Tidak,0.001000,Tidak,23.6629,104.6654
-5,Pasar Ikan (air),"ARIMA(6,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,17.8586,154.1775
-6,Pasar Ikan (air),"ARIMA(9,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,25.9109,168.4610
+1,Pasar Ikan (air),"ARIMAX(2,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,8.6949,113.1107
+2,Pasar Ikan (air),"ARIMAX(3,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,8.1874,Error
+3,Pasar Ikan (air),"ARIMAX(4,0,0)",Ya,0.000000,Tidak,0.001000,Tidak,17.4488,159.2198
+4,Pasar Ikan (air),"ARIMAX(5,0,0)",Ya,0.000000,Tidak,0.001000,Tidak,23.6629,104.6654
+5,Pasar Ikan (air),"ARIMAX(6,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,17.8586,154.1775
+6,Pasar Ikan (air),"ARIMAX(9,0,0)",Tidak,0.000000,Tidak,0.001000,Tidak,25.9109,168.4610
