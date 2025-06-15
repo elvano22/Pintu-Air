@@ -7,6 +7,7 @@ from plotly.subplots import make_subplots
 from scipy.stats import pearsonr
 from statsmodels.tsa.seasonal import seasonal_decompose
 from utils.data_loader import load_main_data
+from utils.footer import show_footer
 
 st.title("📊 Informasi dan Analisis Data")
 
@@ -386,3 +387,5 @@ with st.expander("📖 Penjelasan Analisis", expanded=False):
     - Double-click untuk reset view
     - Download chart dengan klik camera icon
     """)
+
+show_footer()
