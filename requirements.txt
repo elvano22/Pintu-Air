@@ -1,4 +1,6 @@
-plotly
 streamlit
 pandas
 numpy
+plotly
+scipy
+statsmodels
