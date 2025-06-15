@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import base64
 import plotly.express as px
+from utils.footer import show_footer
 
 # Cache
 data = load_main_data()
@@ -253,3 +254,4 @@ with col3:
         st.error("Data tidak tersedia")
 
 
+show_footer()

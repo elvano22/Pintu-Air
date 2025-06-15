@@ -2,7 +2,7 @@ import streamlit as st
 
 # Page config
 st.set_page_config(
-    page_title="AquaPredict",
+    page_title="aqualert",
     page_icon="assets/images/logo_partial.svg",
     layout="wide"
 )
