@@ -4,3 +4,6 @@ numpy
 plotly
 scipy
 statsmodels
+openpyxl
+xgboost
+sklearn
