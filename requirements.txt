@@ -6,4 +6,4 @@ scipy
 statsmodels
 openpyxl
 xgboost
-sklearn
+scikit-learn
