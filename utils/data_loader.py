@@ -3,7 +3,7 @@ import pandas as pd
 
 @st.cache_data
 def load_main_data():
-    return pd.read_csv("data/02 All Data.csv")
+    return pd.read_csv("data/03_All_Data.csv")
 
 @st.cache_data
 def load_info_data():

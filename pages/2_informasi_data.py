@@ -25,7 +25,7 @@ st.subheader("📤 Upload Data atau Gunakan Data Default")
 
 data_source = st.radio(
     "Pilih sumber data:",
-    options=["Upload file CSV/Excel", "Gunakan data default (02 All Data.csv)"],
+    options=["Upload file CSV/Excel", "Gunakan data default (03_All_Data.csv)"],
     index=1
 )
 
@@ -59,7 +59,7 @@ else:
         df_final = load_main_data()
         st.success("Data default berhasil dimuat!")
     except FileNotFoundError:
-        st.error("❌ File '02 All Data.csv' tidak ditemukan di folder 'data/'. Pastikan file tersebut tersedia.")
+        st.error("❌ File '03_All_Data.csv' tidak ditemukan di folder 'data/'. Pastikan file tersebut tersedia.")
     except Exception as e:
         st.error(f"❌ Error saat memuat data default: {str(e)}")
 
