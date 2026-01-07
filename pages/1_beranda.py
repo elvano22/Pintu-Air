@@ -63,12 +63,9 @@ def get_alert_level(location, height):
 def load_prediction_model():
     """Load the trained XGBoost model"""
     
-    # Gak usah initialize dengan parameter
     model = xgb.XGBRegressor()
     
     model.load_model('models/13_best_model.json')
-    
-    # Get parameter dari model yang sudah di-load
     model_params = model.get_params()
     
     return model, model_params

@@ -5,5 +5,5 @@ plotly
 scipy
 statsmodels
 openpyxl
-xgboost
+xgboost==3.0.2
 scikit-learn

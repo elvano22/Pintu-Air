@@ -482,7 +482,7 @@ if df_final is not None:
                     - Korelasi silang tinggi Katulampa → Manggarai pada lag 12 menunjukkan air membutuhkan sekitar **12 jam** untuk mencapai Manggarai  
                     - Perbedaan lag optimal antar stasiun mencerminkan **karakteristik aliran sungai yang berbeda**  
                     """)
-
+            else:
                 st.info("Tidak ada stasiun dengan data yang cukup untuk analisis cross-correlation.")
         
         # === SEASONAL DECOMPOSITION (Increased height) ===
