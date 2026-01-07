@@ -460,108 +460,113 @@ if df_final is not None:
                 summary_df = pd.DataFrame(summary_data)
                 st.dataframe(summary_df, use_container_width=True)
                 
+
                 # Add explanation about autocorrelation
-                with st.expander("💡 Penjelasan Autocorrelation vs Cross-Correlation", expanded=False):
+                with st.expander("💡 Penjelasan Autokorelasi dan Korelasi Silang", expanded=False):
                     st.markdown(f"""
-                    **🔍 Perbedaan Analisis:**
-                    
-                    **📈 Autocorrelation ({selected_station}):**
-                    - Mengukur korelasi data **{selected_station} dengan dirinya sendiri** pada lag yang berbeda
-                    - Garis **solid tebal** pada plot
-                    - Berguna untuk mendeteksi **pola temporal internal** dan **seasonality**
-                    - Lag optimal menunjukkan **siklus berulang** dalam data (misal: pola harian, mingguan)
-                    
-                    **🔄 Cross-Correlation (Stasiun Lain):**
-                    - Mengukur korelasi **stasiun lain dengan {selected_station}** pada lag yang berbeda
-                    - Garis **dash** pada plot
-                    - Berguna untuk menentukan **waktu travel** air antar stasiun
-                    - Lag optimal menunjukkan **delay time** dari upstream ke downstream
-                    
-                    **💡 Interpretasi Praktis:**
-                    - **Autocorrelation tinggi** pada lag 24: Pola harian yang kuat
-                    - **Cross-correlation tinggi** Katulampa→Manggarai pada lag 12: Air butuh ~12 jam mengalir
-                    - **Lag optimal** berbeda antar stasiun menunjukkan karakteristik aliran yang unik
-                    
-                    **🎯 Aplikasi untuk Prediksi:**
-                    - Gunakan lag optimal untuk **feature engineering**
-                    - Autocorrelation membantu menentukan **seasonal patterns**
-                    - Cross-correlation menentukan **upstream predictors** yang relevan
+                    ### 🔍 Perbedaan Jenis Analisis Korelasi
+
+                    **📈 Autokorelasi ({selected_station})**
+                    - Mengukur hubungan data **{selected_station} dengan dirinya sendiri** pada berbagai nilai lag  
+                    - Ditampilkan dengan **garis solid tebal** pada grafik  
+                    - Digunakan untuk mengidentifikasi **pola waktu internal**, seperti tren dan musiman  
+                    - Lag optimal mencerminkan adanya **pola berulang**, misalnya pola harian atau mingguan  
+
+                    **🔄 Korelasi Silang (Stasiun Lain terhadap {selected_station})**
+                    - Mengukur hubungan antara **stasiun lain dengan {selected_station}** pada berbagai lag  
+                    - Ditampilkan dengan **garis putus-putus (dash)** pada grafik  
+                    - Digunakan untuk mengidentifikasi **waktu tempuh aliran air** antar stasiun  
+                    - Lag optimal menunjukkan **waktu keterlambatan (delay)** pengaruh dari hulu ke hilir  
+
+                    ### 💡 Interpretasi Praktis
+                    - Korelasi silang tinggi Katulampa → Manggarai pada lag 12 menunjukkan air membutuhkan sekitar **12 jam** untuk mencapai Manggarai  
+                    - Perbedaan lag optimal antar stasiun mencerminkan **karakteristik aliran sungai yang berbeda**  
                     """)
-            else:
+
                 st.info("Tidak ada stasiun dengan data yang cukup untuk analisis cross-correlation.")
         
         # === SEASONAL DECOMPOSITION (Increased height) ===
         st.subheader("🔄 Dekomposisi Time Series")
-        
+
         if selected_col in df_final.columns:
             period = st.selectbox("Pilih periode untuk dekomposisi:", 
-                                 options=[24, 168], 
-                                 format_func=lambda x: f"{x} jam ({'Harian' if x==24 else 'Mingguan'})",
-                                 index=0)
+                                options=[24, 168], 
+                                format_func=lambda x: f"{x} jam ({'Harian' if x==24 else 'Mingguan'})",
+                                index=0)
             
-            try:
-                # Perform seasonal decomposition
-                decomposition = seasonal_decompose(
-                    df_final[selected_col].dropna(),
-                    model='additive',
-                    period=period,
-                    extrapolate_trend='freq'
-                )
-                
-                # Create interactive decomposition plot with increased height
-                fig = make_subplots(
-                    rows=4, cols=1,
-                    subplot_titles=('Data Asli', 'Trend', 'Seasonal', 'Residual'),
-                    vertical_spacing=0.03
-                )
-                
-                # Original
-                fig.add_trace(
-                    go.Scatter(x=decomposition.observed.index, 
-                              y=decomposition.observed.values,
-                              mode='lines', name='Original',
-                              line=dict(color='blue', width=1)),
-                    row=1, col=1
-                )
-                
-                # Trend
-                fig.add_trace(
-                    go.Scatter(x=decomposition.trend.index, 
-                              y=decomposition.trend.values,
-                              mode='lines', name='Trend',
-                              line=dict(color='red', width=2)),
-                    row=2, col=1
-                )
-                
-                # Seasonal
-                fig.add_trace(
-                    go.Scatter(x=decomposition.seasonal.index, 
-                              y=decomposition.seasonal.values,
-                              mode='lines', name='Seasonal',
-                              line=dict(color='green', width=1)),
-                    row=3, col=1
-                )
-                
-                # Residual
-                fig.add_trace(
-                    go.Scatter(x=decomposition.resid.index, 
-                              y=decomposition.resid.values,
-                              mode='lines', name='Residual',
-                              line=dict(color='purple', width=1)),
-                    row=4, col=1
-                )
-                
-                fig.update_layout(
-                    title=f"Dekomposisi Time Series - {selected_station} (periode {period} jam)",
-                    height=1000,  # Increased height
-                    showlegend=False
-                )
-                
-                st.plotly_chart(fig, use_container_width=True)
-                
-            except Exception as e:
-                st.error(f"Error dalam dekomposisi: {str(e)}")
-                st.info("Coba dengan periode yang berbeda atau pastikan data memiliki observasi yang cukup.")
+            # Perform seasonal decomposition
+            decomposition = seasonal_decompose(
+                df_final[selected_col].dropna(),
+                model='additive',
+                period=period,
+                extrapolate_trend='freq'
+            )
+            
+            # Create interactive decomposition plot
+            fig = make_subplots(
+                rows=4, cols=1,
+                subplot_titles=('Data Asli', 'Trend', 'Seasonal', 'Residual'),
+                vertical_spacing=0.08,  # Increased spacing to prevent overlap
+                row_heights=[0.25, 0.25, 0.25, 0.25]  # Equal heights for all subplots
+            )
+            
+            # Original
+            fig.add_trace(
+                go.Scatter(x=decomposition.observed.index, 
+                        y=decomposition.observed.values,
+                        mode='lines', name='Original',
+                        line=dict(color='blue', width=1)),
+                row=1, col=1
+            )
+            
+            # Trend
+            fig.add_trace(
+                go.Scatter(x=decomposition.trend.index, 
+                        y=decomposition.trend.values,
+                        mode='lines', name='Trend',
+                        line=dict(color='red', width=2)),
+                row=2, col=1
+            )
+            
+            # Seasonal
+            fig.add_trace(
+                go.Scatter(x=decomposition.seasonal.index, 
+                        y=decomposition.seasonal.values,
+                        mode='lines', name='Seasonal',
+                        line=dict(color='green', width=1)),
+                row=3, col=1
+            )
+            
+            # Residual
+            fig.add_trace(
+                go.Scatter(x=decomposition.resid.index, 
+                        y=decomposition.resid.values,
+                        mode='lines', name='Residual',
+                        line=dict(color='purple', width=1)),
+                row=4, col=1
+            )
+            
+            # Update layout with better spacing
+            fig.update_layout(
+                title=dict(
+                    text=f"Dekomposisi Time Series - {selected_station} (periode {period} jam)",
+                    font=dict(size=16)
+                ),
+                height=1200,  # Increased height for better visibility
+                showlegend=False,
+                margin=dict(t=100, b=50)  # Add top and bottom margins
+            )
+            
+            # Update x-axes labels
+            fig.update_xaxes(title_text="Tanggal", row=4, col=1)
+            
+            # Update y-axes labels
+            fig.update_yaxes(title_text="Tinggi Air (cm)", row=1, col=1)
+            fig.update_yaxes(title_text="Tinggi Air (cm)", row=2, col=1)
+            fig.update_yaxes(title_text="Komponen", row=3, col=1)
+            fig.update_yaxes(title_text="Residual", row=4, col=1)
+            
+            st.plotly_chart(fig, use_container_width=True)
         
         # === DATA STATISTICS ===
         st.subheader("📈 Statistik Deskriptif")
