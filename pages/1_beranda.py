@@ -65,7 +65,7 @@ def load_prediction_model():
     
     model = xgb.XGBRegressor()
     
-    model.load_model('models/13_best_model.json')
+    model.load_model('./../models/13_best_model.json')
     model_params = model.get_params()
     
     return model, model_params
