@@ -61,13 +61,11 @@ def get_alert_level(location, height):
         return "🟢 Normal", "success"
 
 def load_prediction_model():
-    """Load the trained XGBoost model"""
-    
     model = xgb.XGBRegressor()
-    
-    model.load_model('./../models/13_best_model.json')
+    model._estimator_type = "regressor"
+    model.load_model('./models/13_best_model.json')
     model_params = model.get_params()
-    
+
     return model, model_params
 
 def get_threshold_info(location):
