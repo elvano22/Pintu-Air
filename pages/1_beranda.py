@@ -84,77 +84,133 @@ def get_threshold_info(location):
 
 @st.cache_resource
 def create_prediction_data():
-    """Create prediction data"""
-    model, model_params = load_prediction_model()
-    df = load_main_data()
-    
-    if 'Tanggal' in df.columns:
-        df['Tanggal'] = pd.to_datetime(df['Tanggal'])
-        df.set_index('Tanggal', inplace=True)
-    
-    feature_columns = [
-        "time_index","hour_sin","hour_cos","dayofyear_sin","dayofyear_cos","manggarai_air_lag1","manggarai_air_lag2","manggarai_air_lag3","manggarai_air_lag4","manggarai_air_lag5","manggarai_air_lag6","manggarai_air_lag7","manggarai_air_lag9","manggarai_air_lag12","manggarai_air_lag14","manggarai_air_lag15","manggarai_air_lag17","manggarai_air_lag20","manggarai_air_lag21","depok_air_lag3","depok_air_lag6","depok_air_lag7","depok_air_lag8","depok_air_lag9","depok_air_lag10","depok_air_lag12","depok_air_lag13","depok_air_lag14","depok_air_lag16","depok_air_lag19","depok_air_lag20","depok_air_lag23","depok_air_lag24","katulampa_air_lag3","katulampa_air_lag4","katulampa_air_lag5","katulampa_air_lag14","katulampa_air_lag19","katulampa_air_lag21","manggarai_cuaca_lag1_hujan","manggarai_cuaca_lag2_hujan","manggarai_cuaca_lag4_hujan","manggarai_cuaca_lag5_hujan","manggarai_cuaca_lag7_hujan","manggarai_cuaca_lag9_hujan","manggarai_cuaca_lag12_hujan","manggarai_cuaca_lag19_hujan","depok_cuaca_lag1_hujan","depok_cuaca_lag2_hujan","depok_cuaca_lag4_hujan","depok_cuaca_lag5_hujan","depok_cuaca_lag6_hujan","depok_cuaca_lag7_hujan","depok_cuaca_lag9_hujan","depok_cuaca_lag22_hujan","katulampa_cuaca_lag14_hujan","katulampa_cuaca_lag18_hujan"
-    ]
-        
-    # Prediction logic
-    def predict_6_hours(last_row, model):
-        current_features = [
-            np.sin(2 * np.pi * last_row.name.hour / 24),
-            np.cos(2 * np.pi * last_row.name.hour / 24),
-            np.sin(2 * np.pi * last_row.name.dayofyear / 365.25),
-            np.cos(2 * np.pi * last_row.name.dayofyear / 365.25)
-        ]
-        
-        # Add your lag features
-        for col in feature_columns[4:]:
-            current_features.append(last_row.get(col, 0))
-        
-        prediction = model.predict([current_features])[0]
-        return current_features, prediction
-    
-    # Predict next 6 hours
-    last_data_point = df.iloc[-1]
-    six_hour_predictions = []
-    current_features = None
-    last_prediction = last_data_point['Manggarai (air)']
+    model, _ = load_prediction_model()
 
-    for hour in range(1, 7):
-        next_time = last_data_point.name + pd.Timedelta(hours=hour)
-        
-        # Persiapan fitur untuk prediksi
-        current_features, prediction = predict_6_hours(last_data_point, model)
-        
-        # Update fitur lag
-        current_features[0] = np.sin(2 * np.pi * next_time.hour / 24)
-        current_features[1] = np.cos(2 * np.pi * next_time.hour / 24)
-        
-        # Geser lag features
-        for i in range(4, 22):  # Manggarai air lag features
-            current_features[i] = current_features[i-1]
-        current_features[4] = last_prediction  # Update manggarai_air_lag1
-        
-        # Set semua cuaca lag menjadi 1 (hujan)
-        for i in range(42, len(current_features)):
-            current_features[i] = 1
-        
-        # Prediksi dengan fitur yang diperbarui
-        prediction = model.predict([current_features])[0]
-        
-        six_hour_predictions.append({
-            'Jam Ke-': hour,
+    # =========================
+    # 1. LOAD RAW DATA (6 kolom)
+    # =========================
+    df = load_main_data().copy()
+
+    df['Tanggal'] = pd.to_datetime(df['Tanggal'])
+    df = df.sort_values('Tanggal')
+    df.set_index('Tanggal', inplace=True)
+
+    df_final = df[
+        [
+            'Katulampa (air)', 'Katulampa (cuaca)',
+            'Depok (air)', 'Depok (cuaca)',
+            'Manggarai (air)', 'Manggarai (cuaca)'
+        ]
+    ].copy()
+
+    # =========================
+    # 2. BUILD df_reg (TIME FEATURES)
+    # =========================
+    df_reg = pd.DataFrame(index=df_final.index)
+
+    df_reg['time_index'] = np.arange(len(df_final))
+    df_reg['hour_sin'] = np.sin(2*np.pi*df_reg.index.hour/24)
+    df_reg['hour_cos'] = np.cos(2*np.pi*df_reg.index.hour/24)
+    df_reg['dayofweek_sin'] = np.sin(2*np.pi*df_reg.index.dayofweek/7)
+    df_reg['dayofweek_cos'] = np.cos(2*np.pi*df_reg.index.dayofweek/7)
+    df_reg['dayofyear_sin'] = np.sin(2*np.pi*df_reg.index.dayofyear/365.25)
+    df_reg['dayofyear_cos'] = np.cos(2*np.pi*df_reg.index.dayofyear/365.25)
+
+    # =========================
+    # 3. CREATE LAGS (PERSIS NOTEBOOK)
+    # =========================
+    def create_lag(df_src, col, lags, output_list):
+        for i in lags:
+            if i == 0:
+                air_lag = df_src[f'{col} (air)'].shift(i).to_frame(f'{col.lower()}_air')
+                output_list.append(air_lag)
+            else:
+                air_lag = df_src[f'{col} (air)'].shift(i).to_frame(f'{col.lower()}_air_lag{i}')
+                cuaca_lag = df_src[f'{col} (cuaca)'].shift(i).to_frame(f'{col.lower()}_cuaca_lag{i}')
+                output_list.append(air_lag)
+                output_list.append(cuaca_lag)
+        return output_list
+
+    dfs_list = []
+    dfs_list = create_lag(df_final, 'Manggarai', range(0,25), dfs_list)
+    dfs_list = create_lag(df_final, 'Depok', range(1,25), dfs_list)
+    dfs_list = create_lag(df_final, 'Katulampa', range(1,25), dfs_list)
+
+    df_reg = pd.concat([df_reg] + dfs_list, axis=1)
+
+    # =========================
+    # 4. ENCODE HUJAN (BINARY)
+    # =========================
+    cuaca_cols = [c for c in df_reg.columns if 'cuaca' in c]
+
+    encoded = df_reg[cuaca_cols].isin(['Hujan', 'Gerimis']).astype(int)
+    encoded.columns = [f'{c}_hujan' for c in cuaca_cols]
+
+    df_reg = pd.concat([df_reg, encoded], axis=1)
+    df_reg = df_reg.drop(columns=cuaca_cols)
+
+    # =========================
+    # 5. DROP 24 ROWS AWAL
+    # =========================
+    df_reg_clean = df_reg.iloc[24:].copy()
+
+    # =========================
+    # 6. LOAD SIGNIFICANT FEATURES
+    # =========================
+    sig_cols = pd.read_csv(
+        'data/06_X_train_significant.csv',
+        nrows=1
+    ).columns.tolist()
+
+    # buang kolom non-feature
+    sig_cols = [c for c in sig_cols if c in df_reg_clean.columns]
+
+    # pastikan urutan sama
+    X_latest = df_reg_clean.iloc[[-1]][sig_cols]
+
+    # =========================
+    # 7. AUTOREGRESSIVE FORECAST
+    # =========================
+    last_time = df_reg_clean.index[-1]
+    state = df_reg_clean.iloc[-1].copy()
+
+    results = []
+
+    for step in range(1, 7):
+        next_time = last_time + pd.Timedelta(hours=step)
+
+        # update time features
+        state['time_index'] += 1
+        state['hour_sin'] = np.sin(2*np.pi*next_time.hour/24)
+        state['hour_cos'] = np.cos(2*np.pi*next_time.hour/24)
+        state['dayofyear_sin'] = np.sin(2*np.pi*next_time.dayofyear/365.25)
+        state['dayofyear_cos'] = np.cos(2*np.pi*next_time.dayofyear/365.25)
+
+        X_pred = pd.DataFrame([state])[sig_cols]
+        pred = float(model.predict(X_pred)[0])
+
+        results.append({
+            'Jam Ke-': step,
             'Waktu': next_time.strftime('%H:%M'),
             'Tanggal': next_time.strftime('%Y-%m-%d'),
-            'Prediksi (cm)': prediction,
-            'Range Min (cm)': prediction - 10,
-            'Range Max (cm)': prediction + 10
+            'Prediksi (cm)': pred,
+            'Range Min (cm)': pred - 10,
+            'Range Max (cm)': pred + 10
         })
-        
-        # Update untuk iterasi selanjutnya
-        last_prediction = prediction
-    
-    forecast_df = pd.DataFrame(six_hour_predictions)
-    
-    return forecast_df
+
+        # ===== UPDATE LAG MANGGARAI =====
+        mang_lags = sorted(
+            [c for c in state.index if 'manggarai_air_lag' in c],
+            key=lambda x: int(x.split('lag')[1]),
+            reverse=True
+        )
+
+        for i in range(len(mang_lags)-1):
+            state[mang_lags[i]] = state[mang_lags[i+1]]
+
+        state['manggarai_air_lag1'] = pred
+
+    return pd.DataFrame(results)
 
 # Sidebar File Upload
 st.sidebar.header("Upload CSV for Prediction")
