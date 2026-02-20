@@ -36790,7 +36790,7 @@ Tanggal,Katulampa (air),Katulampa (cuaca),Depok (air),Depok (cuaca),Manggarai (a
 26/12/2025 20:00,20,Mendung,100,Mendung Tipis,670,Terang
 26/12/2025 21:00,20,Mendung Tipis,100,Mendung Tipis,670,Terang
 26/12/2025 22:00,20,Mendung,100,Mendung Tipis,670,Terang
-26/12/2025 23:00,,,,,,
+26/12/2025 23:00,20,Mendung,100,Mendung Tipis,670,Terang
 27/12/2025 00:00,20,Mendung,100,Mendung Tipis,670,Terang
 27/12/2025 01:00,20,Mendung,100,Mendung Tipis,670,Terang
 27/12/2025 02:00,20,Mendung,100,Mendung Tipis,670,Terang
@@ -38094,3 +38094,30 @@ Tanggal,Katulampa (air),Katulampa (cuaca),Depok (air),Depok (cuaca),Manggarai (a
 19/02/2026 04:00,30,Mendung Tipis,110,Gerimis,670,Gerimis
 19/02/2026 05:00,30,Mendung Tipis,110,Gerimis,670,Mendung
 19/02/2026 06:00,30,Mendung Tipis,110,Gerimis,670,Mendung
+19/02/2026 07:00,30,Mendung Tipis,110,Gerimis,670,Mendung
+19/02/2026 08:00,30,Mendung Tipis,100,Gerimis,670,Hujan
+19/02/2026 09:00,30,Mendung Tipis,105,Mendung,680,Mendung Tipis
+19/02/2026 10:00,30,Gerimis,105,Hujan,680,Mendung Tipis
+19/02/2026 11:00,30,Gerimis,105,Gerimis,680,Mendung
+19/02/2026 12:00,30,Hujan,105,Mendung,680,Mendung Tipis
+19/02/2026 13:00,40,Gerimis,105,Mendung,680,Mendung Tipis
+19/02/2026 14:00,70,Mendung Tipis,105,Mendung Tipis,680,Mendung Tipis
+19/02/2026 15:00,0,Mendung,105,Mendung,680,Mendung Tipis
+19/02/2026 16:00,60,Mendung Tipis,105,Mendung,680,Mendung Tipis
+19/02/2026 17:00,50,Terang,130,Mendung Tipis,670,Mendung Tipis
+19/02/2026 18:00,50,Mendung Tipis,170,Mendung Tipis,670,Mendung Tipis
+19/02/2026 19:00,40,Mendung Tipis,160,Mendung Tipis,670,Mendung Tipis
+19/02/2026 20:00,40,Mendung Tipis,150,Mendung Tipis,670,Hujan
+19/02/2026 21:00,40,Mendung Tipis,140,Mendung Tipis,670,Gerimis
+19/02/2026 22:00,40,Hujan,130,Hujan,670,Gerimis
+19/02/2026 23:00,40,Gerimis,125,Hujan,670,Gerimis
+20/02/2026 00:00,40,Gerimis,120,Gerimis,680,Gerimis
+20/02/2026 01:00,40,Mendung,120,Hujan,700,Hujan
+20/02/2026 02:00,50,Mendung,120,Gerimis,700,Hujan
+20/02/2026 03:00,50,Gerimis,140,Hujan,700,Hujan
+20/02/2026 04:00,60,Gerimis,150,Gerimis,720,Hujan
+20/02/2026 05:00,80,Gerimis,150,Hujan,750,Hujan
+20/02/2026 06:00,90,Hujan,180,Gerimis,750,Hujan
+20/02/2026 07:00,100,Gerimis,180,Hujan,750,Hujan
+20/02/2026 08:00,90,Gerimis,195,Mendung,750,Gerimis
+20/02/2026 09:00,80,Mendung,215,Mendung,760,Mendung
