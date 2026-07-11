@@ -1,0 +1,59 @@
+ARSITEKTUR LSTM TERBAIK - DATASET 1
+======================================================================
+Sequence Length: 6
+LSTM Units: [128]
+Dropout Rate: 0.1
+Learning Rate: 0.004
+Batch Size: 32
+Input Features: 15
+Epochs Run (with early stopping): 15
+======================================================================
+
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ lstm (LSTM)                     │ (None, 128)            │        73,728 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 16)             │         2,064 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 1)              │            17 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 227,429 (888.40 KB)
+ Trainable params: 75,809 (296.13 KB)
+ Non-trainable params: 0 (0.00 B)
+ Optimizer params: 151,620 (592.27 KB)
+
+
+======================================================================
+DETAIL PARAMETER PER LAYER
+======================================================================
+
+Layer: lstm
+  Type: LSTM
+  Note: use model.summary() above for shapes
+  Total params: 73728
+    kernel: shape=(15, 512), params=7680
+    recurrent_kernel: shape=(128, 512), params=65536
+    bias: shape=(512,), params=512
+
+Layer: dropout
+  Type: Dropout
+  Note: use model.summary() above for shapes
+  Total params: 0
+
+Layer: dense
+  Type: Dense
+  Note: use model.summary() above for shapes
+  Total params: 2064
+    kernel: shape=(128, 16), params=2048
+    bias: shape=(16,), params=16
+
+Layer: dense_1
+  Type: Dense
+  Note: use model.summary() above for shapes
+  Total params: 17
+    kernel: shape=(16, 1), params=16
+    bias: shape=(1,), params=1

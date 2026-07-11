@@ -1,0 +1,5 @@
+Layer,Matrix,Shape,Min,Max,Mean,Std
+Dense_ReLU (16 unit),Kernel,"(128, 16)",-0.626019,0.643173,-0.005499,0.190594
+Dense_ReLU (16 unit),Bias,"(16,)",-0.440058,0.276695,-0.092348,0.232451
+Dense_Output (1 unit),Kernel,"(16, 1)",-0.477616,0.37154,0.000342,0.206652
+Dense_Output (1 unit),Bias,"(1,)",0.029102,0.029102,0.029102,0.0
